@@ -14,6 +14,7 @@ package com.hankcs.hanlp;
 import com.hankcs.hanlp.corpus.dependency.CoNll.CoNLLSentence;
 import com.hankcs.hanlp.corpus.io.IIOAdapter;
 import com.hankcs.hanlp.dependency.nnparser.NeuralNetworkDependencyParser;
+import com.hankcs.hanlp.dependency.perceptron.parser.KBeamArcEagerDependencyParser;
 import com.hankcs.hanlp.dictionary.py.Pinyin;
 import com.hankcs.hanlp.dictionary.py.PinyinDictionary;
 import com.hankcs.hanlp.dictionary.ts.*;
@@ -153,6 +154,7 @@ public class HanLP
 
         /**
          * 最大熵-依存关系模型
+         * @deprecated 已废弃，请使用{@link KBeamArcEagerDependencyParser}。未来版本将不再发布该模型，并删除配置项
          */
         public static String MaxEntModelPath = "data/model/dependency/MaxEntModel.txt";
         /**
@@ -160,44 +162,45 @@ public class HanLP
          */
         public static String NNParserModelPath = "data/model/dependency/NNParserModel.txt";
         /**
-         * CRF分词模型
+         * 感知机ArcEager依存模型路径
          */
-        // @deprecated 已废弃，请使用{@link com.hankcs.hanlp.model.crf.CRFLexicalAnalyzer}。未来版本将不再发布该模型，并删除配置项
+        public static String PerceptronParserModelPath = "data/model/dependency/perceptron.bin";
+        /**
+         * CRF分词模型
+         *
+         * @deprecated 已废弃，请使用{@link com.hankcs.hanlp.model.crf.CRFLexicalAnalyzer}。未来版本将不再发布该模型，并删除配置项
+         */
         public static String CRFSegmentModelPath = "data/model/segment/CRFSegmentModel.txt";
         /**
          * HMM分词模型
+         *
+         * @deprecated 已废弃，请使用{@link PerceptronLexicalAnalyzer}
          */
         public static String HMMSegmentModelPath = "data/model/segment/HMMSegmentModel.bin";
         /**
-         * CRF依存模型
-         *
-         * @deprecated 已废弃，请使用{@link NeuralNetworkDependencyParser}
-         */
-        public static String CRFDependencyModelPath = "data/model/dependency/CRFDependencyModelMini.txt";
-        /**
          * CRF分词模型
          */
-        public static String CRFCWSModelPath = "data/model/crf/pku199801/cws.bin";
+        public static String CRFCWSModelPath = "data/model/crf/pku199801/cws.txt";
         /**
          * CRF词性标注模型
          */
-        public static String CRFPOSModelPath = "data/model/crf/pku199801/pos.bin";
+        public static String CRFPOSModelPath = "data/model/crf/pku199801/pos.txt";
         /**
          * CRF命名实体识别模型
          */
-        public static String CRFNERModelPath = "data/model/crf/pku199801/ner.bin";
+        public static String CRFNERModelPath = "data/model/crf/pku199801/ner.txt";
         /**
          * 感知机分词模型
          */
-        public static String PerceptronCWSModelPath = "data/model/perceptron/pku199801/cws.bin";
+        public static String PerceptronCWSModelPath = "data/model/perceptron/large/cws.bin";
         /**
          * 感知机词性标注模型
          */
-        public static String PerceptronPOSModelPath = "data/model/perceptron/pku199801/pos.bin";
+        public static String PerceptronPOSModelPath = "data/model/perceptron/pku1998/pos.bin";
         /**
          * 感知机命名实体识别模型
          */
-        public static String PerceptronNERModelPath = "data/model/perceptron/pku199801/ner.bin";
+        public static String PerceptronNERModelPath = "data/model/perceptron/pku1998/ner.bin";
         /**
          * 分词结果是否展示词性
          */
@@ -223,10 +226,26 @@ public class HanLP
                 {  // IKVM (v.0.44.0.5) doesn't set context classloader
                     loader = HanLP.Config.class.getClassLoader();
                 }
-                p.load(new InputStreamReader(Predefine.HANLP_PROPERTIES_PATH == null ?
-                                                 loader.getResourceAsStream("hanlp.properties") :
-                                                 new FileInputStream(Predefine.HANLP_PROPERTIES_PATH)
-                    , "UTF-8"));
+                try
+                {
+                    p.load(new InputStreamReader(Predefine.HANLP_PROPERTIES_PATH == null ?
+                                                     loader.getResourceAsStream("hanlp.properties") :
+                                                     new FileInputStream(Predefine.HANLP_PROPERTIES_PATH)
+                        , "UTF-8"));
+                }
+                catch (Exception e)
+                {
+                    String HANLP_ROOT = System.getProperty("HANLP_ROOT");
+                    if (HANLP_ROOT == null) HANLP_ROOT = System.getenv("HANLP_ROOT");
+                    if (HANLP_ROOT != null)
+                    {
+                        HANLP_ROOT = HANLP_ROOT.trim();
+                        p = new Properties();
+                        p.setProperty("root", HANLP_ROOT);
+                        logger.info("使用环境变量 HANLP_ROOT=" + HANLP_ROOT);
+                    }
+                    else throw e;
+                }
                 String root = p.getProperty("root", "").replaceAll("\\\\", "/");
                 if (root.length() > 0 && !root.endsWith("/")) root += "/";
                 CoreDictionaryPath = root + p.getProperty("CoreDictionaryPath", CoreDictionaryPath);
@@ -270,8 +289,8 @@ public class HanLP
                 WordNatureModelPath = root + p.getProperty("WordNatureModelPath", WordNatureModelPath);
                 MaxEntModelPath = root + p.getProperty("MaxEntModelPath", MaxEntModelPath);
                 NNParserModelPath = root + p.getProperty("NNParserModelPath", NNParserModelPath);
+                PerceptronParserModelPath = root + p.getProperty("PerceptronParserModelPath", PerceptronParserModelPath);
                 CRFSegmentModelPath = root + p.getProperty("CRFSegmentModelPath", CRFSegmentModelPath);
-                CRFDependencyModelPath = root + p.getProperty("CRFDependencyModelPath", CRFDependencyModelPath);
                 HMMSegmentModelPath = root + p.getProperty("HMMSegmentModelPath", HMMSegmentModelPath);
                 CRFCWSModelPath = root + p.getProperty("CRFCWSModelPath", CRFCWSModelPath);
                 CRFPOSModelPath = root + p.getProperty("CRFPOSModelPath", CRFPOSModelPath);
@@ -311,26 +330,40 @@ public class HanLP
             }
             catch (Exception e)
             {
-                StringBuilder sbInfo = new StringBuilder("========Tips========\n请将hanlp.properties放在下列目录：\n"); // 打印一些友好的tips
-                String classPath = (String) System.getProperties().get("java.class.path");
-                if (classPath != null)
+                if (new File("data/dictionary/CoreNatureDictionary.tr.txt").isFile())
                 {
-                    for (String path : classPath.split(File.pathSeparator))
-                    {
-                        if (new File(path).isDirectory())
-                        {
-                            sbInfo.append(path).append('\n');
-                        }
-                    }
+                    logger.info("使用当前目录下的data");
                 }
-                sbInfo.append("Web项目则请放到下列目录：\n" +
-                                  "Webapp/WEB-INF/lib\n" +
-                                  "Webapp/WEB-INF/classes\n" +
-                                  "Appserver/lib\n" +
-                                  "JRE/lib\n");
-                sbInfo.append("并且编辑root=PARENT/path/to/your/data\n");
-                sbInfo.append("现在HanLP将尝试从").append(System.getProperties().get("user.dir")).append("读取data……");
-                logger.severe("没有找到hanlp.properties，可能会导致找不到data\n" + sbInfo);
+                else
+                {
+                    StringBuilder sbInfo = new StringBuilder("========Tips========\n请将hanlp.properties放在下列目录：\n"); // 打印一些友好的tips
+                    if (new File("src/main/java").isDirectory())
+                    {
+                        sbInfo.append("src/main/resources");
+                    }
+                    else
+                    {
+                        String classPath = (String) System.getProperties().get("java.class.path");
+                        if (classPath != null)
+                        {
+                            for (String path : classPath.split(File.pathSeparator))
+                            {
+                                if (new File(path).isDirectory())
+                                {
+                                    sbInfo.append(path).append('\n');
+                                }
+                            }
+                        }
+                        sbInfo.append("Web项目则请放到下列目录：\n" +
+                                          "Webapp/WEB-INF/lib\n" +
+                                          "Webapp/WEB-INF/classes\n" +
+                                          "Appserver/lib\n" +
+                                          "JRE/lib\n");
+                        sbInfo.append("并且编辑root=PARENT/path/to/your/data\n");
+                        sbInfo.append("现在HanLP将尝试从").append(System.getProperties().get("user.dir")).append("读取data……");
+                    }
+                    logger.severe("没有找到hanlp.properties，可能会导致找不到data\n" + sbInfo);
+                }
             }
         }
 
@@ -624,7 +657,6 @@ public class HanLP
      *                  <li>条件随机场 (crf)：分词、词性标注与命名实体识别精度都较高，适合要求较高的NLP任务</li>
      *                  <li>感知机 (perceptron)：分词、词性标注与命名实体识别，支持在线学习</li>
      *                  <li>N最短路 (nshort)：命名实体识别稍微好一些，牺牲了速度</li>
-     *                  <li>2阶隐马 (hmm2)：训练速度较CRF快</li>
      *                  </ul>
      * @return 一个分词器
      */
@@ -651,8 +683,6 @@ public class HanLP
                 logger.warning("CRF模型加载失败");
                 throw new RuntimeException(e);
             }
-        else if ("hmm2".equals(algorithm) || "二阶隐马".equals(algorithm))
-            return new HMMSegment();
         else if ("perceptron".equals(algorithm) || "感知机".equals(algorithm))
         {
             try
@@ -741,6 +771,24 @@ public class HanLP
     public static List<WordInfo> extractWords(BufferedReader reader, int size, boolean newWordsOnly) throws IOException
     {
         NewWordDiscover discover = new NewWordDiscover(4, 0.0f, .5f, 100f, newWordsOnly);
+        return discover.discover(reader, size);
+    }
+
+    /**
+     * 提取词语（新词发现）
+     *
+     * @param reader          从reader获取文本
+     * @param size            需要提取词语的数量
+     * @param newWordsOnly    是否只提取词典中没有的词语
+     * @param max_word_len    词语最长长度
+     * @param min_freq        词语最低频率
+     * @param min_entropy     词语最低熵
+     * @param min_aggregation 词语最低互信息
+     * @return 一个词语列表
+     */
+    public static List<WordInfo> extractWords(BufferedReader reader, int size, boolean newWordsOnly, int max_word_len, float min_freq, float min_entropy, float min_aggregation) throws IOException
+    {
+        NewWordDiscover discover = new NewWordDiscover(max_word_len, min_freq, min_entropy, min_aggregation, newWordsOnly);
         return discover.discover(reader, size);
     }
 

@@ -13,26 +13,24 @@ package com.hankcs.hanlp.seg;
 
 import com.hankcs.hanlp.HanLP;
 import com.hankcs.hanlp.collection.AhoCorasick.AhoCorasickDoubleArrayTrie;
-import com.hankcs.hanlp.dictionary.CoreBiGramTableDictionary;
 import com.hankcs.hanlp.dictionary.CoreDictionary;
 import com.hankcs.hanlp.dictionary.CustomDictionary;
 import com.hankcs.hanlp.dictionary.other.CharTable;
 import com.hankcs.hanlp.dictionary.other.CharType;
-import com.hankcs.hanlp.seg.CRF.CRFSegment;
+import com.hankcs.hanlp.seg.Dijkstra.DijkstraSegment;
 import com.hankcs.hanlp.seg.Other.CommonAhoCorasickSegmentUtil;
 import com.hankcs.hanlp.seg.Other.DoubleArrayTrieSegment;
-import com.hankcs.hanlp.seg.Segment;
-import com.hankcs.hanlp.seg.Dijkstra.DijkstraSegment;
 import com.hankcs.hanlp.seg.Viterbi.ViterbiSegment;
 import com.hankcs.hanlp.seg.common.ResultTerm;
 import com.hankcs.hanlp.seg.common.Term;
 import com.hankcs.hanlp.seg.common.wrapper.SegmentWrapper;
-import com.hankcs.hanlp.tokenizer.*;
+import com.hankcs.hanlp.tokenizer.IndexTokenizer;
+import com.hankcs.hanlp.tokenizer.StandardTokenizer;
+import com.hankcs.hanlp.tokenizer.TraditionalChineseTokenizer;
 import junit.framework.TestCase;
 
 import java.io.BufferedReader;
 import java.io.StringReader;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.TreeMap;
@@ -51,6 +49,19 @@ public class SegmentTest extends TestCase
 //        ));
     }
 
+    public void testIssue1054()
+    {
+        System.out.println(HanLP.segment("私信必回"));
+    }
+
+    public void testIssue880() throws Exception
+    {
+//        HanLP.Config.enableDebug();
+        Segment segment = new DijkstraSegment();
+        System.out.println(segment.seg("龚学平等表示会保证金云鹏的安全"));
+        System.out.println(segment.seg("王中军代表蓝队发言"));
+    }
+
     public void testViterbi() throws Exception
     {
 //        HanLP.Config.enableDebug(true);
@@ -58,6 +69,22 @@ public class SegmentTest extends TestCase
         Segment seg = new DijkstraSegment();
         List<Term> termList = seg.seg("优酷总裁魏明介绍了优酷2015年的内容战略，表示要以“大电影、大网剧、大综艺”为关键词");
 //        System.out.println(termList);
+    }
+
+    public void testExtendViterbi() throws Exception
+    {
+        HanLP.Config.enableDebug(false);
+        String path = System.getProperty("user.dir") + "/" + "data/dictionary/custom/CustomDictionary.txt;" +
+            System.getProperty("user.dir") + "/" + "data/dictionary/custom/全国地名大全.txt";
+        path = path.replace("\\", "/");
+        String text = "一半天帕克斯曼是走不出丁字桥镇的";
+        Segment segment = HanLP.newSegment().enableCustomDictionary(false);
+        Segment seg = new ViterbiSegment(path);
+        System.out.println("不启用字典的分词结果：" + segment.seg(text));
+        System.out.println("默认分词结果：" + HanLP.segment(text));
+        seg.enableCustomDictionaryForcing(true).enableCustomDictionary(true);
+        List<Term> termList = seg.seg(text);
+        System.out.println("自定义字典的分词结果：" + termList);
     }
 
     public void testNotional() throws Exception
@@ -478,7 +505,7 @@ public class SegmentTest extends TestCase
         String s = "苏苏中级会计什么时候更新";
         CustomDictionary.add("苏苏");
         StandardTokenizer.SEGMENT.enableCustomDictionaryForcing(true);
-        assertEquals("[苏苏/nz, 中级会计/nz, 什么/ry, 时候/n, 更新/v]", HanLP.segment(s).toString());
+        assertTrue(HanLP.segment(s).toString().contains("苏苏"));
     }
 
     public void testIssue790() throws Exception
@@ -495,5 +522,18 @@ public class SegmentTest extends TestCase
     public void testTimeIssue() throws Exception
     {
         assertTrue(HanLP.segment("1月中旬应该会发生什么").toString().contains("1月"));
+    }
+
+    public void testIssue932() throws Exception
+    {
+        Segment segment = new DijkstraSegment().enableOrganizationRecognize(true);
+        HanLP.Config.enableDebug();
+        System.out.println(segment.seg("福哈生态工程有限公司"));
+    }
+
+    public void testIssue1172()
+    {
+        CustomDictionary.insert("我的额度", "xyz");
+        System.out.println(HanLP.segment("我的额度不够，需要提高额度"));
     }
 }

@@ -95,10 +95,10 @@ public class IOUtil
             InputStream in = IOAdapter == null ? new FileInputStream(path) :
                     IOAdapter.open(path);
             byte[] fileContent = new byte[in.available()];
-            readBytesFromOtherInputStream(in, fileContent);
+            int read = readBytesFromOtherInputStream(in, fileContent);
             in.close();
             // 处理 UTF-8 BOM
-            if (fileContent[0] == -17 && fileContent[1] == -69 && fileContent[2] == -65)
+            if (read >= 3 && fileContent[0] == -17 && fileContent[1] == -69 && fileContent[2] == -65)
                 return new String(fileContent, 3, fileContent.length - 3, Charset.forName("UTF-8"));
             return new String(fileContent, Charset.forName("UTF-8"));
         }
@@ -292,7 +292,7 @@ public class IOUtil
     public static int readBytesFromOtherInputStream(InputStream is, byte[] targetArray) throws IOException
     {
         assert targetArray != null;
-        assert targetArray.length > 0;
+        if (targetArray.length == 0) return 0;
         int len;
         int off = 0;
         while (off < targetArray.length && (len = is.read(targetArray, off, targetArray.length - off)) != -1)
@@ -409,11 +409,53 @@ public class IOUtil
      */
     public static String removeUTF8BOM(String line)
     {
-        if (line.startsWith("\uFEFF")) // UTF-8 byte order mark (EF BB BF)
+        if (line != null && line.startsWith("\uFEFF")) // UTF-8 byte order mark (EF BB BF)
         {
             line = line.substring(1);
         }
         return line;
+    }
+
+    /**
+     * 递归遍历获取目录下的所有文件
+     *
+     * @param path 根目录
+     * @return 文件列表
+     */
+    public static List<File> fileList(String path)
+    {
+        List<File> fileList = new LinkedList<File>();
+        File folder = new File(path);
+        if (folder.isDirectory())
+            enumerate(folder, fileList);
+        else
+            fileList.add(folder); // 兼容路径为文件的情况
+        return fileList;
+    }
+
+    /**
+     * 递归遍历目录
+     *
+     * @param folder   目录
+     * @param fileList 储存文件
+     */
+    private static void enumerate(File folder, List<File> fileList)
+    {
+        File[] fileArray = folder.listFiles();
+        if (fileArray != null)
+        {
+            for (File file : fileArray)
+            {
+                if (file.isFile() && !file.getName().startsWith(".")) // 过滤隐藏文件
+                {
+                    fileList.add(file);
+                }
+                else
+                {
+                    enumerate(file, fileList);
+                }
+            }
+        }
     }
 
     /**
@@ -634,12 +676,14 @@ public class IOUtil
         TreeMap<String, CoreDictionary.Attribute> map = new TreeMap<String, CoreDictionary.Attribute>();
         for (String path : pathArray)
         {
-            int natureIndex = path.lastIndexOf(' ');
+            File file = new File(path);
+            String fileName = file.getName();
+            int natureIndex = fileName.lastIndexOf(' ');
             Nature defaultNature = Nature.n;
             if (natureIndex > 0)
             {
-                String natureString = path.substring(natureIndex + 1);
-                path = path.substring(0, natureIndex);
+                String natureString = fileName.substring(natureIndex + 1);
+                path = file.getParent() + File.separator + fileName.substring(0, natureIndex);
                 if (natureString.length() > 0 && !natureString.endsWith(".txt") && !natureString.endsWith(".csv"))
                 {
                     defaultNature = Nature.create(natureString);

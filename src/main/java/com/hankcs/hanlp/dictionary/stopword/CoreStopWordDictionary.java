@@ -18,8 +18,8 @@ import com.hankcs.hanlp.seg.common.Term;
 import com.hankcs.hanlp.utility.Predefine;
 import com.hankcs.hanlp.utility.TextUtility;
 
+import java.io.BufferedOutputStream;
 import java.io.DataOutputStream;
-import java.io.File;
 import java.util.List;
 import java.util.ListIterator;
 import static com.hankcs.hanlp.utility.Predefine.logger;
@@ -34,19 +34,38 @@ public class CoreStopWordDictionary
     static StopWordDictionary dictionary;
     static
     {
-        ByteArray byteArray = ByteArray.createByteArray(HanLP.Config.CoreStopWordDictionaryPath + Predefine.BIN_EXT);
+        load(HanLP.Config.CoreStopWordDictionaryPath, true);
+    }
+
+    /**
+     * 重新加载{@link HanLP.Config#CoreStopWordDictionaryPath}所指定的停用词词典，并且生成新缓存。
+     */
+    public static void reload()
+    {
+        load(HanLP.Config.CoreStopWordDictionaryPath, false);
+    }
+
+    /**
+     * 加载另一部停用词词典
+     * @param coreStopWordDictionaryPath 词典路径
+     * @param loadCacheIfPossible 是否优先加载缓存（速度更快）
+     */
+    public static void load(String coreStopWordDictionaryPath, boolean loadCacheIfPossible)
+    {
+        ByteArray byteArray = loadCacheIfPossible ? ByteArray.createByteArray(coreStopWordDictionaryPath + Predefine.BIN_EXT) : null;
         if (byteArray == null)
         {
             try
             {
                 dictionary = new StopWordDictionary(HanLP.Config.CoreStopWordDictionaryPath);
-                DataOutputStream out = new DataOutputStream(IOUtil.newOutputStream(HanLP.Config.CoreStopWordDictionaryPath + Predefine.BIN_EXT));
+                DataOutputStream out = new DataOutputStream(new BufferedOutputStream(IOUtil.newOutputStream(HanLP.Config.CoreStopWordDictionaryPath + Predefine.BIN_EXT)));
                 dictionary.save(out);
                 out.close();
             }
             catch (Exception e)
             {
                 logger.severe("载入停用词词典" + HanLP.Config.CoreStopWordDictionaryPath + "失败"  + TextUtility.exceptionToString(e));
+                throw new RuntimeException("载入停用词词典" + HanLP.Config.CoreStopWordDictionaryPath + "失败");
             }
         }
         else
@@ -148,12 +167,13 @@ public class CoreStopWordDictionary
      * 对分词结果应用过滤
      * @param termList
      */
-    public static void apply(List<Term> termList)
+    public static List<Term> apply(List<Term> termList)
     {
         ListIterator<Term> listIterator = termList.listIterator();
         while (listIterator.hasNext())
         {
             if (shouldRemove(listIterator.next())) listIterator.remove();
         }
+        return termList;
     }
 }

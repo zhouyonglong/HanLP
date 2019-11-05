@@ -16,6 +16,7 @@ import com.hankcs.hanlp.classification.classifiers.IClassifier;
 import com.hankcs.hanlp.classification.classifiers.NaiveBayesClassifier;
 import com.hankcs.hanlp.classification.models.NaiveBayesModel;
 import com.hankcs.hanlp.corpus.io.IOUtil;
+import com.hankcs.hanlp.utility.TestUtility;
 
 import java.io.File;
 import java.io.IOException;
@@ -30,16 +31,17 @@ public class DemoTextClassification
     /**
      * 搜狗文本分类语料库5个类目，每个类目下1000篇文章，共计5000篇文章
      */
-    public static final String CORPUS_FOLDER = "data/test/搜狗文本分类语料库迷你版";
+    public static final String CORPUS_FOLDER = TestUtility.ensureTestData("搜狗文本分类语料库迷你版", "http://file.hankcs.com/corpus/sogou-text-classification-corpus-mini.zip");
     /**
      * 模型保存路径
      */
     public static final String MODEL_PATH = "data/test/classification-model.ser";
 
+
     public static void main(String[] args) throws IOException
     {
         IClassifier classifier = new NaiveBayesClassifier(trainOrLoadModel());
-        predict(classifier, "C罗压梅西内马尔蝉联金球奖 2017=C罗年");
+        predict(classifier, "C罗获2018环球足球奖最佳球员 德尚荣膺最佳教练");
         predict(classifier, "英国造航母耗时8年仍未服役 被中国速度远远甩在身后");
         predict(classifier, "研究生考录模式亟待进一步专业化");
         predict(classifier, "如果真想用食物解压,建议可以食用燕麦");

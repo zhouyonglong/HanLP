@@ -10,51 +10,13 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
+import static com.hankcs.hanlp.dictionary.other.CharType.*;
+
 /**
  * 文本工具类
  */
 public class TextUtility
 {
-
-    /**
-     * 单字节
-     */
-    public static final int CT_SINGLE = 5;// SINGLE byte
-
-    /**
-     * 分隔符"!,.?()[]{}+=
-     */
-    public static final int CT_DELIMITER = CT_SINGLE + 1;// delimiter
-
-    /**
-     * 中文字符
-     */
-    public static final int CT_CHINESE = CT_SINGLE + 2;// Chinese Char
-
-    /**
-     * 字母
-     */
-    public static final int CT_LETTER = CT_SINGLE + 3;// HanYu Pinyin
-
-    /**
-     * 数字
-     */
-    public static final int CT_NUM = CT_SINGLE + 4;// HanYu Pinyin
-
-    /**
-     * 序号
-     */
-    public static final int CT_INDEX = CT_SINGLE + 5;// HanYu Pinyin
-
-    /**
-     * 中文数字
-     */
-    public static final int CT_CNUM = CT_SINGLE + 6;
-
-    /**
-     * 其他
-     */
-    public static final int CT_OTHER = CT_SINGLE + 12;// Other
 
     public static int charType(char c)
     {
@@ -70,7 +32,7 @@ public class TextUtility
     {
         if (str != null && str.length() > 0)
         {
-            if ("零○〇一二两三四五六七八九十廿百千万亿壹贰叁肆伍陆柒捌玖拾佰仟".contains(str)) return CT_CNUM;
+            if (Predefine.CHINESE_NUMBERS.contains(str)) return CT_CNUM;
             byte[] b;
             try
             {
@@ -87,9 +49,7 @@ public class TextUtility
             int ub2 = getUnsigned(b2);
             if (ub1 < 128)
             {
-                if (ub1 < 32) return CT_DELIMITER; // NON PRINTABLE CHARACTERS
-                if (' ' == b1) return CT_OTHER;
-                if ('\n' == b1) return CT_DELIMITER;
+                if (ub1 <= 32) return CT_OTHER; // NON PRINTABLE CHARACTERS
                 if ("*\"!,.?()[]{}+=/\\;:|".indexOf((char) b1) != -1)
                     return CT_DELIMITER;
                 if ("0123456789".indexOf((char)b1) != -1)

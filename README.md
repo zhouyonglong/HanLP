@@ -9,14 +9,14 @@ HanLP: Han Language Processing
 
 ------
 
-**HanLP**是一系列模型与算法组成的NLP工具包，由大快搜索主导并完全开源，目标是普及自然语言处理在生产环境中的应用。**HanLP**具备功能完善、性能高效、架构清晰、语料时新、可自定义的特点。
+HanLP是一系列模型与算法组成的NLP工具包，由大快搜索主导并完全开源，目标是普及自然语言处理在生产环境中的应用。HanLP具备功能完善、性能高效、架构清晰、语料时新、可自定义的特点。内部算法经过工业界和学术界考验，配套书籍[《自然语言处理入门》](http://nlp.hankcs.com/book.php)已经出版。
 
-**HanLP**提供下列功能：
+HanLP提供下列功能：
 
 * 中文分词
     * HMM-Bigram（速度与精度最佳平衡；一百兆内存）
         * [最短路分词](https://github.com/hankcs/HanLP#1-%E7%AC%AC%E4%B8%80%E4%B8%AAdemo)、[N-最短路分词](https://github.com/hankcs/HanLP#5-n-%E6%9C%80%E7%9F%AD%E8%B7%AF%E5%BE%84%E5%88%86%E8%AF%8D)
-    * 由字构词（侧重精度，可识别新词；适合NLP任务）
+    * 由字构词（侧重精度，全世界最大语料库，可识别新词；适合NLP任务）
         * [感知机分词](https://github.com/hankcs/HanLP/wiki/%E7%BB%93%E6%9E%84%E5%8C%96%E6%84%9F%E7%9F%A5%E6%9C%BA%E6%A0%87%E6%B3%A8%E6%A1%86%E6%9E%B6)、[CRF分词](https://github.com/hankcs/HanLP#6-crf%E5%88%86%E8%AF%8D)
     * 词典分词（侧重速度，每秒数千万字符；省内存）
         * [极速词典分词](https://github.com/hankcs/HanLP#7-%E6%9E%81%E9%80%9F%E8%AF%8D%E5%85%B8%E5%88%86%E8%AF%8D)
@@ -47,21 +47,24 @@ HanLP: Han Language Processing
     * 语义推荐、拼音推荐、字词推荐
 * 依存句法分析
     * [基于神经网络的高性能依存句法分析器](https://github.com/hankcs/HanLP#21-%E4%BE%9D%E5%AD%98%E5%8F%A5%E6%B3%95%E5%88%86%E6%9E%90)
-    * [MaxEnt依存句法分析](https://github.com/hankcs/HanLP/blob/master/src/main/java/com/hankcs/hanlp/dependency/MaxEntDependencyParser.java)
+    * [基于ArcEager转移系统的柱搜索依存句法分析器](https://github.com/hankcs/HanLP/blob/master/src/test/java/com/hankcs/demo/DemoDependencyParser.java#L34)
 * [文本分类](https://github.com/hankcs/HanLP/wiki/%E6%96%87%E6%9C%AC%E5%88%86%E7%B1%BB%E4%B8%8E%E6%83%85%E6%84%9F%E5%88%86%E6%9E%90)
     * [情感分析](https://github.com/hankcs/HanLP/wiki/%E6%96%87%E6%9C%AC%E5%88%86%E7%B1%BB%E4%B8%8E%E6%83%85%E6%84%9F%E5%88%86%E6%9E%90#%E6%83%85%E6%84%9F%E5%88%86%E6%9E%90)
+* [文本聚类](https://github.com/hankcs/HanLP/wiki/%E6%96%87%E6%9C%AC%E8%81%9A%E7%B1%BB)
+    - KMeans、Repeated Bisection、自动推断聚类数目k
 * [word2vec](https://github.com/hankcs/HanLP/wiki/word2vec)
     * 词向量训练、加载、词语相似度计算、语义运算、查询、KMeans聚类
     * 文档语义相似度计算
 * [语料库工具](https://github.com/hankcs/HanLP/tree/master/src/main/java/com/hankcs/hanlp/corpus)
+    - 部分默认模型训练自小型语料库，鼓励用户自行训练。所有模块提供[训练接口](https://github.com/hankcs/HanLP/wiki)，语料可参考[98年人民日报语料库](http://file.hankcs.com/corpus/pku98.zip)。
 
-在提供丰富功能的同时，**HanLP**内部模块坚持低耦合、模型坚持惰性加载、服务坚持静态提供、词典坚持明文发布，使用非常方便，同时自带一些语料处理工具，帮助用户训练自己的模型。
+在提供丰富功能的同时，HanLP内部模块坚持低耦合、模型坚持惰性加载、服务坚持静态提供、词典坚持明文发布，使用非常方便。默认模型训练自全世界最大规模的中文语料库，同时自带一些语料处理工具，帮助用户训练自己的模型。
 
 ------
 
 ## 项目主页
 
-[在线演示](http://hanlp.hankcs.com/)、[Python调用](https://github.com/hankcs/pyhanlp)、[Solr及Lucene插件](https://github.com/hankcs/hanlp-lucene-plugin)、[国内下载](http://hanlp.dksou.com/HanLP.html)、[更多信息](https://github.com/hankcs/HanLP/wiki)。
+[《自然语言处理入门》🔥](http://nlp.hankcs.com/book.php)、[随书代码](https://github.com/hankcs/HanLP/tree/v1.7.5/src/test/java/com/hankcs/book)、[在线演示](http://hanlp.com/)、[Python调用](https://github.com/hankcs/pyhanlp)、[Solr及Lucene插件](https://github.com/hankcs/hanlp-lucene-plugin)、[论坛](https://bbs.hankcs.com/)、[论文引用](https://github.com/hankcs/HanLP/wiki/papers)、[更多信息](https://github.com/hankcs/HanLP/wiki)。
 
 ------
 
@@ -71,25 +74,25 @@ HanLP: Han Language Processing
 
 为了方便用户，特提供内置了数据包的Portable版，只需在pom.xml加入：
 
-```
+```xml
 <dependency>
     <groupId>com.hankcs</groupId>
     <artifactId>hanlp</artifactId>
-    <version>portable-1.6.4</version>
+    <version>portable-1.7.5</version>
 </dependency>
 ```
 
-零配置，即可使用基本功能（除由字构词、依存句法分析外的全部功能）。如果用户有自定义的需求，可以参考方式二，使用hanlp.properties进行配置。
+零配置，即可使用基本功能（除由字构词、依存句法分析外的全部功能）。如果用户有自定义的需求，可以参考方式二，使用hanlp.properties进行配置（Portable版同样支持hanlp.properties）。
 
 ### 方式二、下载jar、data、hanlp.properties
 
-**HanLP**将数据与程序分离，给予用户自定义的自由。
+HanLP将数据与程序分离，给予用户自定义的自由。
 
 #### 1、下载：[data.zip](http://nlp.hankcs.com/download.php?file=data) 
 
 下载后解压到任意目录，接下来通过配置文件告诉HanLP数据包的位置。
 
-**HanLP**中的数据分为*词典*和*模型*，其中*词典*是词法分析必需的，*模型*是句法分析必需的。
+HanLP中的数据分为*词典*和*模型*，其中*词典*是词法分析必需的，*模型*是句法分析必需的。
 
     data
     │
@@ -109,21 +112,15 @@ HanLP: Han Language Processing
 
 为data的**父目录**即可，比如data目录是`/Users/hankcs/Documents/data`，那么`root=/Users/hankcs/Documents/` 。
 
-- 如果选用mini词典的话，则需要修改配置文件：
-```
-CoreDictionaryPath=data/dictionary/CoreNatureDictionary.mini.txt
-BiGramDictionaryPath=data/dictionary/CoreNatureDictionary.ngram.mini.txt
-```
-
-最后将`hanlp.properties`放入classpath即可，对于任何项目，都可以放到src或resources目录下，编译时IDE会自动将其复制到classpath中。
+最后将`hanlp.properties`放入classpath即可，对于多数项目，都可以放到src或resources目录下，编译时IDE会自动将其复制到classpath中。除了配置文件外，还可以使用环境变量`HANLP_ROOT`来设置`root`。安卓项目请参考[demo](https://github.com/hankcs/HanLPAndroidDemo)。
 
 如果放置不当，HanLP会提示当前环境下的合适路径，并且尝试从项目根目录读取数据集。
 
 ## 调用方法
 
-**HanLP**几乎所有的功能都可以通过工具类`HanLP`快捷调用，当你想不起来调用方法时，只需键入`HanLP.`，IDE应当会给出提示，并展示**HanLP**完善的文档。
+HanLP几乎所有的功能都可以通过工具类`HanLP`快捷调用，当你想不起来调用方法时，只需键入`HanLP.`，IDE应当会给出提示，并展示HanLP完善的文档。
 
-所有Demo都位于[com.hankcs.demo](https://github.com/hankcs/HanLP/tree/master/src/test/java/com/hankcs/demo)下，比文档覆盖了更多细节，更新更及时，强烈建议运行一遍。
+所有Demo都位于[com.hankcs.demo](https://github.com/hankcs/HanLP/tree/master/src/test/java/com/hankcs/demo)下，比文档覆盖了更多细节，更新更及时，**强烈建议运行一遍**。此处仅列举部分常用接口。
 
 ### 1. 第一个Demo
 
@@ -132,9 +129,9 @@ System.out.println(HanLP.segment("你好，欢迎使用HanLP汉语处理包！")
 ```
 - 内存要求
   * 内存120MB以上（-Xms120m -Xmx120m -Xmn64m），标准数据包（35万核心词库+默认用户词典），分词测试正常。全部词典和模型都是惰性加载的，不使用的模型相当于不存在，可以自由删除。
-  * **HanLP**对词典的数据结构进行了长期的优化，可以应对绝大多数场景。哪怕**HanLP**的词典上百兆也无需担心，因为在内存中被精心压缩过。如果内存非常有限，请使用小词典。**HanLP**默认使用大词典，同时提供小词典，请参考配置文件章节。
-- 写给正在编译**HanLP**的开发者
-  * 如果你正在编译运行从Github检出的**HanLP**代码，并且没有下载data缓存，那么首次加载词典/模型会发生一个*自动缓存*的过程。
+  * HanLP对词典的数据结构进行了长期的优化，可以应对绝大多数场景。哪怕HanLP的词典上百兆也无需担心，因为在内存中被精心压缩过。如果内存非常有限，请使用小词典。HanLP默认使用大词典，同时提供小词典，请参考配置文件章节。
+- 写给正在编译HanLP的开发者
+  * 如果你正在编译运行从Github检出的HanLP代码，并且没有下载data缓存，那么首次加载词典/模型会发生一个*自动缓存*的过程。
   * *自动缓存*的目的是为了加速词典载入速度，在下次载入时，缓存的词典文件会带来毫秒级的加载速度。由于词典体积很大，*自动缓存*会耗费一些时间，请耐心等待。
   * *自动缓存*缓存的不是明文词典，而是双数组Trie树、DAWG、AhoCorasickDoubleArrayTrie等数据结构。
 
@@ -145,7 +142,7 @@ List<Term> termList = StandardTokenizer.segment("商品和服务");
 System.out.println(termList);
 ```
 - 说明
-  * **HanLP**中有一系列“开箱即用”的静态分词器，以`Tokenizer`结尾，在接下来的例子中会继续介绍。
+  * HanLP中有一系列“开箱即用”的静态分词器，以`Tokenizer`结尾，在接下来的例子中会继续介绍。
   * `HanLP.segment`其实是对`StandardTokenizer.segment`的包装。
   * 分词结果包含词性，每个词性的意思请查阅[《HanLP词性标注集》](http://www.hankcs.com/nlp/part-of-speech-tagging.html#h2-8)。
 - 算法详解
@@ -160,8 +157,8 @@ System.out.println(NLPTokenizer.analyze("我的希望是希望张晚霞的背影
 System.out.println(NLPTokenizer.analyze("支援臺灣正體香港繁體：微软公司於1975年由比爾·蓋茲和保羅·艾倫創立。"));
 ```
 - 说明
-  * NLP分词`NLPTokenizer`会执行全部命名实体识别和词性标注。
-  * 默认模型训练自[98年1月份人民日报语料](https://github.com/hankcs/OpenCorpus/tree/master/pku98)，面向生产环境的语料库应当在千万字量级。欢迎用户在自己的语料上[训练新模型](https://github.com/hankcs/HanLP/wiki/%E7%BB%93%E6%9E%84%E5%8C%96%E6%84%9F%E7%9F%A5%E6%9C%BA%E6%A0%87%E6%B3%A8%E6%A1%86%E6%9E%B6)以适应新领域、识别新的命名实体。
+  * NLP分词`NLPTokenizer`会执行词性标注和命名实体识别，由[结构化感知机序列标注框架](https://github.com/hankcs/HanLP/wiki/%E7%BB%93%E6%9E%84%E5%8C%96%E6%84%9F%E7%9F%A5%E6%9C%BA%E6%A0%87%E6%B3%A8%E6%A1%86%E6%9E%B6)支撑。
+  * 默认模型训练自`9970`万字的大型综合语料库，是已知范围内**全世界最大**的中文分词语料库。语料库规模决定实际效果，面向生产环境的语料库应当在千万字量级。欢迎用户在自己的语料上[训练新模型](https://github.com/hankcs/HanLP/wiki/%E7%BB%93%E6%9E%84%E5%8C%96%E6%84%9F%E7%9F%A5%E6%9C%BA%E6%A0%87%E6%B3%A8%E6%A1%86%E6%9E%B6)以适应新领域、识别新的命名实体。
 
 ### 4. 索引分词
 
@@ -199,23 +196,21 @@ for (String sentence : testCase)
 ### 6. CRF分词
 
 ```java
-Segment segment = new CRFSegment();
-segment.enablePartOfSpeechTagging(true);
-List<Term> termList = segment.seg("你看过穆赫兰道吗");
-System.out.println(termList);
-for (Term term : termList)
-{
-    if (term.nature == null)
-    {
-        System.out.println("识别到新词：" + term.word);
-    }
-}
+        CRFLexicalAnalyzer analyzer = new CRFLexicalAnalyzer();
+        String[] tests = new String[]{
+            "商品和服务",
+            "上海华安工业（集团）公司董事长谭旭光和秘书胡花蕊来到美国纽约现代艺术博物馆参观",
+            "微软公司於1975年由比爾·蓋茲和保羅·艾倫創立，18年啟動以智慧雲端、前端為導向的大改組。" // 支持繁体中文
+        };
+        for (String sentence : tests)
+        {
+            System.out.println(analyzer.analyze(sentence));
+        }
 ```
 - 说明
   * CRF对新词有很好的识别能力，但是开销较大。
 - 算法详解
-  * [《CRF分词的纯Java实现》](http://www.hankcs.com/nlp/segment/crf-segmentation-of-the-pure-java-implementation.html)
-  * [《CRF++模型格式说明》](http://www.hankcs.com/nlp/the-crf-model-format-description.html)
+  * [《CRF中文分词、词性标注与命名实体识别》](https://github.com/hankcs/HanLP/wiki/CRF%E8%AF%8D%E6%B3%95%E5%88%86%E6%9E%90)
 
 ### 7. 极速词典分词
 
@@ -287,8 +282,8 @@ public class DemoCustomDictionary
 }
 ```
 - 说明
-  * `CustomDictionary`是一份全局的用户自定义词典，可以随时增删，影响全部分词器。
-  * 另外可以在任何分词器中关闭它。通过代码动态增删不会保存到词典文件。
+  * `CustomDictionary`是一份全局的用户自定义词典，可以随时增删，影响全部分词器。另外可以在任何分词器中关闭它。通过代码动态增删不会保存到词典文件。
+  * 中文分词≠词典，词典无法解决中文分词，`Segment`提供高低优先级应对不同场景，请参考[FAQ](https://github.com/hankcs/HanLP/wiki/FAQ#%E4%B8%BA%E4%BB%80%E4%B9%88%E4%BF%AE%E6%94%B9%E4%BA%86%E8%AF%8D%E5%85%B8%E8%BF%98%E6%98%AF%E6%B2%A1%E6%9C%89%E6%95%88%E6%9E%9C)。
 - 追加词典
   * `CustomDictionary`主词典文本路径是`data/dictionary/custom/CustomDictionary.txt`，用户可以在此增加自己的词语（不推荐）；也可以单独新建一个文本文件，通过配置文件`CustomDictionaryPath=data/dictionary/custom/CustomDictionary.txt; 我的词典.txt;`来追加词典（推荐）。
   * 始终建议将相同词性的词语放到同一个词典文件里，便于维护和分享。
@@ -539,9 +534,9 @@ public class DemoPinyin
 }
 ```
 - 说明
-  * **HanLP**不仅支持基础的汉字转拼音，还支持声母、韵母、音调、音标和输入法首字母首声母功能。
-  * **HanLP**能够识别多音字，也能给繁体中文注拼音。
-  * 最重要的是，**HanLP**采用的模式匹配升级到`AhoCorasickDoubleArrayTrie`，性能大幅提升，能够提供毫秒级的响应速度！
+  * HanLP不仅支持基础的汉字转拼音，还支持声母、韵母、音调、音标和输入法首字母首声母功能。
+  * HanLP能够识别多音字，也能给繁体中文注拼音。
+  * 最重要的是，HanLP采用的模式匹配升级到`AhoCorasickDoubleArrayTrie`，性能大幅提升，能够提供毫秒级的响应速度！
 - 算法详解
   * [《汉字转拼音与简繁转换的Java实现》](http://www.hankcs.com/nlp/java-chinese-characters-to-pinyin-and-simplified-conversion-realization.html#h2-17)
 
@@ -562,7 +557,7 @@ public class DemoTraditionalChinese2SimplifiedChinese
 }
 ```
 - 说明
-  * **HanLP**能够识别简繁分歧词，比如`打印机=印表機`。许多简繁转换工具不能区分“以后”“皇后”中的两个“后”字，**HanLP**可以。
+  * HanLP能够识别简繁分歧词，比如`打印机=印表機`。许多简繁转换工具不能区分“以后”“皇后”中的两个“后”字，HanLP可以。
 - 算法详解
   * [《汉字转拼音与简繁转换的Java实现》](http://www.hankcs.com/nlp/java-chinese-characters-to-pinyin-and-simplified-conversion-realization.html#h2-17)
 
@@ -598,7 +593,7 @@ public class DemoSuggester
 }
 ```
 - 说明
-  * 在搜索引擎的输入框中，用户输入一个词，搜索引擎会联想出最合适的搜索词，**HanLP**实现了类似的功能。
+  * 在搜索引擎的输入框中，用户输入一个词，搜索引擎会联想出最合适的搜索词，HanLP实现了类似的功能。
   * 可以动态调节每种识别器的权重
 
 ### 20. 语义距离
@@ -684,13 +679,12 @@ public class DemoDependencyParser
 ```
 - 说明
   * 内部采用`NeuralNetworkDependencyParser`实现，用户可以直接调用`NeuralNetworkDependencyParser.compute(sentence)`
-  * 也可以调用基于最大熵的依存句法分析器`MaxEntDependencyParser.compute(sentence)`
+  * 也可以调用基于ArcEager转移系统的柱搜索依存句法分析器`KBeamArcEagerDependencyParser`
 - 算法详解
   * [《基于神经网络分类模型与转移系统的判决式依存句法分析器》](http://www.hankcs.com/nlp/parsing/neural-network-based-dependency-parser.html)
-  * [《最大熵依存句法分析器的实现》](http://www.hankcs.com/nlp/parsing/to-achieve-the-maximum-entropy-of-the-dependency-parser.html)
 
 ## 词典说明
-本章详细介绍**HanLP**中的词典格式，满足用户自定义的需要。**HanLP**中有许多词典，它们的格式都是相似的，形式都是文本文档，随时可以修改。
+本章详细介绍HanLP中的词典格式，满足用户自定义的需要。HanLP中有许多词典，它们的格式都是相似的，形式都是文本文档，随时可以修改。
 ### 基本格式
 词典分为词频词性词典和词频词典。
 
@@ -708,7 +702,7 @@ public class DemoDependencyParser
 
 ### 数据结构
 
-Trie树（字典树）是**HanLP**中使用最多的数据结构，为此，我实现了通用的Trie树，支持泛型、遍历、储存、载入。
+Trie树（字典树）是HanLP中使用最多的数据结构，为此，我实现了通用的Trie树，支持泛型、遍历、储存、载入。
 
 用户自定义词典采用AhoCorasickDoubleArrayTrie和二分Trie树储存，其他词典采用基于[双数组Trie树(DoubleArrayTrie)](http://www.hankcs.com/program/java/%E5%8F%8C%E6%95%B0%E7%BB%84trie%E6%A0%91doublearraytriejava%E5%AE%9E%E7%8E%B0.html)实现的[AC自动机AhoCorasickDoubleArrayTrie](http://www.hankcs.com/program/algorithm/aho-corasick-double-array-trie.html)。关于一些常用数据结构的性能评估，请参考[wiki](https://github.com/hankcs/HanLP/wiki/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84)。
 
@@ -738,22 +732,32 @@ HanLP.Config.enableDebug();
   * 基于角色标注的命名实体识别比较依赖词典，所以词典的质量大幅影响识别质量。
   * 这些词典的格式与原理都是类似的，请阅读[相应的文章](http://www.hankcs.com/category/nlp/ner/)或代码修改它。
 
-如果问题解决了，欢迎向我提交一个pull request，这是我在代码库中保留明文词典的原因，众人拾柴火焰高！
+若还有疑问，请参考[《自然语言处理入门》](http://nlp.hankcs.com/book.php)相应章节。如果问题解决了，欢迎向我提交一个pull request，这是我在代码库中保留明文词典的原因，众人拾柴火焰高！
 
 ------
+
+## [《自然语言处理入门》](http://nlp.hankcs.com/book.php)
+
+![img](http://file.hankcs.com/img/nlp-book-squre.jpg)
+
+一本配套HanLP的NLP入门书，基础理论与生产代码并重，Python与Java双实现。从基本概念出发，逐步介绍中文分词、词性标注、命名实体识别、信息抽取、文本聚类、文本分类、句法分析这几个热门问题的算法原理与工程实现。书中通过对多种算法的讲解，比较了它们的优缺点和适用场景，同时详细演示生产级成熟代码，助你真正将自然语言处理应用在生产环境中。
+
+[《自然语言处理入门》](http://nlp.hankcs.com/book.php)由南方科技大学数学系创系主任夏志宏、微软亚洲研究院副院长周明、字节跳动人工智能实验室总监李航、华为诺亚方舟实验室语音语义首席科学家刘群、小米人工智能实验室主任兼NLP首席科学家王斌、中国科学院自动化研究所研究员宗成庆、清华大学副教授刘知远、北京理工大学副教授张华平和52nlp作序推荐。感谢各位前辈老师，希望这个项目和这本书能成为大家工程和学习上的“蝴蝶效应”，帮助大家在NLP之路上蜕变成蝶。
 
 ## 版权
 
 ### Apache License Version 2.0
 
-如不特殊注明，所有模块都以此协议授权使用。
-
-### 上海林原信息科技有限公司
-- HanLP产品初始知识产权归上海林原信息科技有限公司所有，任何人和企业可以无偿使用，可以对产品、源代码进行任何形式的修改，可以打包在其他产品中进行销售。
+- 如不特殊注明，所有模块都以此协议授权使用。
 - 任何使用了HanLP的全部或部分功能、词典、模型的项目、产品或文章等形式的成果必须显式注明HanLP及此项目主页。
 
-### 大快搜索
-- 现在正式由大快搜索主导开发，新模块继续完全开源。
+### 青岛大快搜索计算技术股份有限公司
+
+- HanLP从v1.3版本起正式由大快搜索主导开发，并拥有后续版本的版权，新版本继续完全开源，目前唯一官网为：http://hanlp.com/ 。
+
+### 上海林原信息科技有限公司
+
+- HanLP 早期得到了上海林原公司的大力支持，并拥有1.28及前序版本的版权，相关版本也曾在上海林源公司网站发布。
 
 ### 其他版权方
 - 实施上由个人维护，欢迎任何人与任何公司向本项目开源模块。
@@ -777,9 +781,9 @@ HanLP.Config.enableDebug();
 - An Efficient Implementation of Trie Structures, JUN-ICHI AOE AND KATSUSHI MORIMOTO
 - TextRank: Bringing Order into Texts, Rada Mihalcea and Paul Tarau
 
-感谢上海林原信息科技有限公司的刘先生，允许我利用工作时间开发HanLP，提供服务器和域名，并且促成了开源。感谢诸位用户的关注和使用，HanLP并不完善，未来还恳求各位NLP爱好者多多关照，提出宝贵意见。
+感谢诸位用户的关注和使用，HanLP并不完善，未来还恳求各位NLP爱好者多多关照，提出宝贵意见。
 
 作者 [@hankcs](http://weibo.com/hankcs/)
 
-2014年12月16日
+2016年9月16日
 
